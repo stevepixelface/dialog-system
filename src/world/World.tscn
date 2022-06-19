@@ -1,0 +1,76 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://assets/sprites/Background.png" type="Texture" id=1]
+[ext_resource path="res://src/player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/ui/DialogPlayer.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/world/DialogArea.tscn" type="PackedScene" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 40, 81.25 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 168, 10 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 30, 40 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 48, 48 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 30, 46 )
+
+[node name="World" type="Node2D"]
+
+[node name="BackgroundSprite" type="Sprite" parent="."]
+position = Vector2( 160, 90 )
+scale = Vector2( 4, 4 )
+texture = ExtResource( 1 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 32, 108 )
+
+[node name="DialoguePlayer" parent="." instance=ExtResource( 3 )]
+dialog_file = "res://assets/json/world_dialog.json"
+
+[node name="WorldBarrier" type="StaticBody2D" parent="."]
+
+[node name="CollisionWest" type="CollisionShape2D" parent="WorldBarrier"]
+position = Vector2( -40, 82.5 )
+shape = SubResource( 1 )
+
+[node name="CollisionSouth" type="CollisionShape2D" parent="WorldBarrier"]
+position = Vector2( 160, 150 )
+shape = SubResource( 2 )
+
+[node name="CollisionEast" type="CollisionShape2D" parent="WorldBarrier"]
+position = Vector2( 360, 81.25 )
+shape = SubResource( 1 )
+
+[node name="DialogAreaDoor" parent="." instance=ExtResource( 4 )]
+position = Vector2( 32, 104 )
+dialog_key = "door"
+
+[node name="CollisionShape2D" parent="DialogAreaDoor" index="0"]
+position = Vector2( 2, -4 )
+shape = SubResource( 3 )
+
+[node name="DialogAreaPictures" parent="." instance=ExtResource( 4 )]
+position = Vector2( 169, 101 )
+dialog_key = "pictures"
+
+[node name="CollisionShape2D" parent="DialogAreaPictures" index="0"]
+position = Vector2( 3, -9 )
+shape = SubResource( 4 )
+
+[node name="DialogAreaBookcase" parent="." instance=ExtResource( 4 )]
+position = Vector2( 287, 112 )
+dialog_key = "bookcase"
+
+[node name="CollisionShape2D" parent="DialogAreaBookcase" index="0"]
+position = Vector2( -1, -18 )
+shape = SubResource( 5 )
+
+[editable path="DialogAreaDoor"]
+[editable path="DialogAreaPictures"]
+[editable path="DialogAreaBookcase"]
