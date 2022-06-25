@@ -1,47 +1,47 @@
 extends CanvasLayer
 
-export (String, FILE, "*json") var dialog_file
+export (String, FILE, "*json") var scene_text_file
 
-var dialog_for_scene = {}
-var current_dialog = []
-var dialog_in_progress = false
+var scene_text = {}
+var selected_text = []
+var in_progress = false
 
 onready var background = $Background
 onready var text_label = $TextLabel
 
 func _ready():
 	background.visible = false
-	dialog_for_scene = load_dialog()
+	scene_text = load_scene_text()
 	SignalBus.connect("display_dialog", self, "on_display_dialog")
 
-func load_dialog():
+func load_scene_text():
 	var file = File.new()
-	if file.file_exists(dialog_file):
-		file.open(dialog_file, File.READ)
+	if file.file_exists(scene_text_file):
+		file.open(scene_text_file, File.READ)
 		return parse_json(file.get_as_text())
 
-func show_dialog_text():
-	text_label.text = current_dialog.pop_front()
+func show_text():
+	text_label.text = selected_text.pop_front()
 
-func continue_dialog():
-	if current_dialog.size() > 0:
-		show_dialog_text()
+func next_line():
+	if selected_text.size() > 0:
+		show_text()
 	else:
-		finish_dialog()
+		finish()
 
-func finish_dialog():
+func finish():
 	text_label.text = ""
 	background.visible = false
-	dialog_in_progress = false
+	in_progress = false
 	get_tree().paused = false
 	
-func on_display_dialog(dialog_key):
-	if dialog_in_progress:
-		continue_dialog()
+func on_display_dialog(text_key):
+	if in_progress:
+		next_line()
 	else:
 		get_tree().paused = true
 		background.visible = true
-		dialog_in_progress = true
-		current_dialog = dialog_for_scene[dialog_key].duplicate()
-		show_dialog_text()
+		in_progress = true
+		selected_text = scene_text[text_key].duplicate()
+		show_text()
 
